@@ -24,6 +24,7 @@ public class PlayerBehaviour : MonoBehaviour {
     void Update() {
 
         Rotation();
+        Movement();
     }
 
     void Rotation() {
@@ -39,5 +40,27 @@ public class PlayerBehaviour : MonoBehaviour {
         Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
         // add ship's rotation
         this.transform.rotation = rotation;
+    }
+
+    void Movement() {
+
+        Vector3 movement = new Vector3();
+        movement.x += Input.GetAxis("Horizontal");
+        movement.y += Input.GetAxis("Vertical");
+
+        movement.Normalize();
+
+        if (movement.magnitude > 0) {
+
+            currentSpeed = playerSpeed;
+            transform.Translate(movement * Time.deltaTime * playerSpeed, Space.World);
+            lastMovement = movement;
+
+        } else {
+
+            transform.Translate(lastMovement * Time.deltaTime * currentSpeed, Space.World);
+            currentSpeed *= 0.9f;
+        }
+        
     }
 }
